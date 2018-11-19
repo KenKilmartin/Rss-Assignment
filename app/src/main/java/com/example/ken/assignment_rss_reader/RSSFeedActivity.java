@@ -2,11 +2,16 @@ package com.example.ken.assignment_rss_reader;
 
 import android.app.ListActivity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -14,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,6 +36,8 @@ public class RSSFeedActivity extends ListActivity {
     RSSParser rssParser = new RSSParser();
     Toolbar toolbar;
     int finalValue;
+    ImageView imageView;
+    Bitmap bimage;
 
     List<RSSItem> rssItems = new ArrayList<>();
     private static String TAG_TITLE = "title";
@@ -43,6 +51,7 @@ public class RSSFeedActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rss_feed);
+        imageView = findViewById(R.id.image);
 
 
         String rss_link = getIntent().getStringExtra("rssLink");
@@ -115,11 +124,24 @@ public class RSSFeedActivity extends ListActivity {
                     e.printStackTrace();
 
                 }
+                String imageURL = item.image;
+
+                //TODO:
+                //trying to convert imageURL to a bitmap image. Dont know how to set the image view to the image
+                bimage = null;
+                try {
+                    InputStream in = new java.net.URL(imageURL).openStream();
+                    bimage = BitmapFactory.decodeStream(in);
+                } catch (Exception e) {
+                    Log.e("Error Message", e.getMessage());
+                    e.printStackTrace();
+                }
+
 
 
                 map.put(TAG_TITLE, item.title);
                 map.put(TAG_DESC, item.description);
-                map.put(TAG_IMAGE, item.image);
+                map.put(TAG_IMAGE, imageURL);
                 map.put(TAG_LINK,item.link);
                 map.put(TAG_PUB_DATE, item.pubdate);
 
@@ -134,8 +156,9 @@ public class RSSFeedActivity extends ListActivity {
                     ListAdapter adapter = new SimpleAdapter(
                             RSSFeedActivity.this,
                             rssItemList, R.layout.rss_item_list_row,
-                            new String[]{TAG_LINK,TAG_DESC, TAG_TITLE, TAG_IMAGE,TAG_PUB_DATE},
-                            new int[]{R.id.page_url,R.id.desc, R.id.title,R.id.image, R.id.pub_date});
+
+                            new String[]{TAG_LINK, TAG_DESC, TAG_TITLE, TAG_IMAGE, TAG_PUB_DATE},
+                            new int[]{R.id.page_url, R.id.desc, R.id.title, R.id.image, R.id.pub_date});
 
                     // updating listview
                     setListAdapter(adapter);

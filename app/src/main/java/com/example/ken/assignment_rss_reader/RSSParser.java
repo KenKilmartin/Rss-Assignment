@@ -4,6 +4,7 @@ import android.util.Log;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
@@ -38,7 +39,7 @@ class RSSParser {
     private static String TAG_DESRIPTION = "description";
     private static String TAG_ITEM = "item";
     private static String TAG_PUB_DATE = "pubDate";
-    private static String TAG_IMAGE = "enclosure url";
+    private static String TAG_IMAGE = "url";
 
     // constructor
     public RSSParser() {
@@ -59,13 +60,29 @@ class RSSParser {
                 NodeList items = e.getElementsByTagName(TAG_ITEM);
                 for (int i = 0; i < items.getLength(); i++) {
                     Element e1 = (Element) items.item(i);
+                    String image ="";
+                    NodeList values = items.item(i).getChildNodes();
+
+                    for (int j = 0; j < values.getLength(); j++){
+
+                        if(values.item(j).getNodeName().equals("enclosure"))
+                        {
+
+                           NamedNodeMap nm = values.item(j).getAttributes();
+
+                           //item(2) as the url is the 3rd attribute of enclosure in the xml
+                           image = nm.item(2).getTextContent();
+
+                        }
+
+                    }
+
 
                     String title = this.getValue(e1, TAG_TITLE);
                     String link = this.getValue(e1, TAG_LINK);
                     String description = this.getValue(e1, TAG_DESRIPTION);
                     String pubdate = this.getValue(e1, TAG_PUB_DATE);
-                    String image = this.getValue(e1, TAG_IMAGE);
-
+                   // String image = this.getValue(e1, TAG_IMAGE);
                     RSSItem rssItem = new RSSItem(title,description,image,pubdate,link);
 
                     // adding item to list

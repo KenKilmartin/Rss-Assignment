@@ -29,6 +29,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/items"
         android:id="@+id/numberEntered"
+        android:text="2"
         android:inputType="number"/>
 
 
