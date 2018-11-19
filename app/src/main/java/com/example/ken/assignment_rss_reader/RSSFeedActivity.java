@@ -98,33 +98,26 @@ public class RSSFeedActivity extends ListActivity {
             rssItems = rssParser.getRSSFeedItems(rss_url);
 //
 //            trying to loop through the rss with given number
-//            for(int i = 0; i<finalValue; i++){
-//                // creating new HashMap
-//                if (rssItems[i].description.toString().equals(""))
-//                    break;
-//                HashMap<String, String> map = new HashMap<String, String>();
-//            }
-            // looping through each item
-            for (RSSItem item : rssItems) {
+            for(int i = 0; i<finalValue; i++){
                 // creating new HashMap
-                if (item.description.toString().equals(""))
+                if (rssItems.get(i).description.toString().equals(""))
                     break;
                 HashMap<String, String> map = new HashMap<String, String>();
 
                 // adding each child node to HashMap key => value
 
-                String givenDateString = item.pubdate.trim();
+                String givenDateString = rssItems.get(i).pubdate.trim();
                 SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
                 try {
                     Date mDate = sdf.parse(givenDateString);
                     SimpleDateFormat sdf2 = new SimpleDateFormat("EEEE, dd MMMM yyyy - hh:mm a", Locale.ENGLISH);
-                    item.pubdate = sdf2.format(mDate);
+                    rssItems.get(i).pubdate = sdf2.format(mDate);
 
                 } catch (ParseException e) {
                     e.printStackTrace();
 
                 }
-                String imageURL = item.image;
+                String imageURL = rssItems.get(i).image;
 
                 //TODO:
                 //trying to convert imageURL to a bitmap image. Dont know how to set the image view to the image
@@ -139,16 +132,62 @@ public class RSSFeedActivity extends ListActivity {
 
 
 
-                map.put(TAG_TITLE, item.title);
-                map.put(TAG_DESC, item.description);
+                map.put(TAG_TITLE, rssItems.get(i).title);
+                map.put(TAG_DESC, rssItems.get(i).description);
                 map.put(TAG_IMAGE, imageURL);
-                map.put(TAG_LINK,item.link);
-                map.put(TAG_PUB_DATE, item.pubdate);
+                map.put(TAG_LINK,rssItems.get(i).link);
+                map.put(TAG_PUB_DATE, rssItems.get(i).pubdate);
 
 
                 // adding HashList to ArrayList
                 rssItemList.add(map);
+
             }
+//            // looping through each item
+//            for (RSSItem item : rssItems) {
+//                // creating new HashMap
+//                if (item.description.toString().equals(""))
+//                    break;
+//                HashMap<String, String> map = new HashMap<String, String>();
+//
+//                // adding each child node to HashMap key => value
+//
+//                String givenDateString = item.pubdate.trim();
+//                SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
+//                try {
+//                    Date mDate = sdf.parse(givenDateString);
+//                    SimpleDateFormat sdf2 = new SimpleDateFormat("EEEE, dd MMMM yyyy - hh:mm a", Locale.ENGLISH);
+//                    item.pubdate = sdf2.format(mDate);
+//
+//                } catch (ParseException e) {
+//                    e.printStackTrace();
+//
+//                }
+//                String imageURL = item.image;
+//
+//                //TODO:
+//                //trying to convert imageURL to a bitmap image. Dont know how to set the image view to the image
+//                bimage = null;
+//                try {
+//                    InputStream in = new java.net.URL(imageURL).openStream();
+//                    bimage = BitmapFactory.decodeStream(in);
+//                } catch (Exception e) {
+//                    Log.e("Error Message", e.getMessage());
+//                    e.printStackTrace();
+//                }
+//
+//
+//
+//                map.put(TAG_TITLE, item.title);
+//                map.put(TAG_DESC, item.description);
+//                map.put(TAG_IMAGE, imageURL);
+//                map.put(TAG_LINK,item.link);
+//                map.put(TAG_PUB_DATE, item.pubdate);
+//
+//
+//                // adding HashList to ArrayList
+//                rssItemList.add(map);
+//            }
 
             // updating UI from Background Thread
             runOnUiThread(new Runnable() {
