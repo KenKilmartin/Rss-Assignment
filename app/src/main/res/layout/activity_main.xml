@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Please enter URL"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/enterURL"/>
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/enterURL"
+        android:text="https://www.independent.ie/breaking-news/rss/"
+        android:id="@+id/userEnteredUrl"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="How many number of items"
+        app:layout_constraintTop_toBottomOf="@id/userEnteredUrl"
+        android:id="@+id/items"/>
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/items"
+        android:id="@+id/numberEntered"
+        android:inputType="number"/>
+
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Retrieve RSS Feed"
+        app:layout_constraintTop_toBottomOf="@+id/numberEntered"/>
+
+
+</android.support.constraint.ConstraintLayout>
