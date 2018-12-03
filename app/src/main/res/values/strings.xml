@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Assignment-RSS-Reader</string>
+    <string name="userStringEntered">Rss entered</string>
+    <string name="userIntEntered">Number entered</string>
+    <string name="firstRSS">first rss</string>
+
+
 </resources>

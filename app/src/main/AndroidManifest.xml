@@ -3,6 +3,8 @@
     package="com.example.ken.assignment_rss_reader">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" >
+    </uses-permission>
 
     <application
         android:allowBackup="true"
@@ -21,6 +23,12 @@
 
         <activity android:name=".BrowserActivity" />
         <activity android:name=".RSSFeedActivity" />
+        <receiver
+            android:name=".MyBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true">
+
+        </receiver>
     </application>
 
 </manifest>

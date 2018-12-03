@@ -72,7 +72,7 @@ class RSSParser {
 
                            //item(2) as the url is the 3rd attribute of enclosure in the xml
                            image = nm.item(2).getTextContent();
-
+        Log.e("URL", image);
                         }
 
                     }
