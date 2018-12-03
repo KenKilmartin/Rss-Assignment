@@ -70,8 +70,8 @@ public class RSSFeedActivity extends ListActivity {
         finalValue=Integer.parseInt(numberOfFeed);
         new LoadRSSFeedItems().execute(rss_link);
 
+        // creates the list view
         ListView lv = getListView();
-
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             public void onItemClick(AdapterView<?> parent, View view,
@@ -82,6 +82,7 @@ public class RSSFeedActivity extends ListActivity {
                 startActivity(in);
             }
         });
+        // when we click the back button on the second page this clears the values that has been entered so it will go back to the first page
         backbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

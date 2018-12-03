@@ -45,7 +45,9 @@ class RSSParser {
     public RSSParser() {
 
     }
-
+    /*
+    This class is responsible for parsing the xml
+    */
     public List<RSSItem> getRSSFeedItems(String rss_url) {
         List<RSSItem> itemsList = new ArrayList<RSSItem>();
         String rss_feed_xml;

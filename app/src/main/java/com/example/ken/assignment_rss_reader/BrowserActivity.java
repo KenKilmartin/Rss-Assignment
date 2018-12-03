@@ -19,6 +19,9 @@ public class BrowserActivity extends AppCompatActivity {
     WebView webView;
     String url;
 
+    /*
+         This Activity is when a RSS feed is clicked it opens it in a browser
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +38,7 @@ public class BrowserActivity extends AppCompatActivity {
         initWebView();
         webView.loadUrl(url);
     }
-
+    // initialises the client for webview
     private void initWebView() {
         webView.setWebChromeClient(new MyWebChromeClient(this));
         webView.clearCache(true);

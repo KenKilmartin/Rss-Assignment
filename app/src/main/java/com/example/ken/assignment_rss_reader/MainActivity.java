@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         userEnteredUrl= (EditText)findViewById(R.id.userEnteredUrl);
         numberEntered = (EditText)findViewById(R.id.numberEntered);
 
-//        These are for writing what previous rss feed entered
+        // These are for writing what previous rss feed entered
         final SharedPreferences sharedPreferences = this.getSharedPreferences("com.example.myapp.namePrefereance",Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = sharedPreferences.edit();
 
