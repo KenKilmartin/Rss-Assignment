@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        startAlert();
+
         userEnteredUrl= (EditText)findViewById(R.id.userEnteredUrl);
         numberEntered = (EditText)findViewById(R.id.numberEntered);
 
@@ -68,11 +68,13 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, RSSFeedActivity.class).putExtra("rssLink", userEnteredUrl.getText().toString()).putExtra("numberEntered",numberEntered.getText().toString()));
             }
         });
+        startAlert();
 
     }
     public void startAlert() {
        int i = 10; //this is 10000 milleseconds
         Intent intent = new Intent(this, MyBroadcastReceiver.class);
+        intent.putExtra("rssLink", userSavedEnteredUrl);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 this.getApplicationContext(), 234324243, intent, 0);
@@ -83,8 +85,8 @@ public class MainActivity extends AppCompatActivity {
         alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
                 + (i * 1000), pendingIntent);
 
-        Toast.makeText(this, "Alarm set in " + i + " seconds",
-                Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, "Alarm set in " + i + " seconds",
+//                Toast.LENGTH_LONG).show();
     }
 
 }

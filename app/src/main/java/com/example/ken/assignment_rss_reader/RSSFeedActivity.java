@@ -51,7 +51,7 @@ public class RSSFeedActivity extends ListActivity {
     private static String TAG_IMAGE = "image";
     private static String TAG_LINK = "link";
     private static String TAG_PUB_DATE = "pubDate";
-//    String savedHeadline;
+    String savedHeadline;
 
 
     @Override
@@ -118,15 +118,22 @@ public class RSSFeedActivity extends ListActivity {
             // list of rss items
             rssItems = rssParser.getRSSFeedItems(rss_url);
 
-
-//            savedHeadline = sharedPreferences.getString(getString(R.string.userStringEntered),"");
-//            //if first title is not same as saved title, then theres a new headline
-//            if(!rssItems.get(0).title.equals(savedHeadline)){
-//                String firstHeadline = rssItems.get(0).title;
+//            final SharedPreferences sharedPreferences = RSSFeedActivity.this.getSharedPreferences("com.example.myapp.namePrefereance",Context.MODE_PRIVATE);
+//            final SharedPreferences.Editor editor = sharedPreferences.edit();
+//
+//
+//
+//            savedHeadline = sharedPreferences.getString(getString(R.string.firstRSS),"");
+//            //if first title is not same as saved title, then there's a new headline
+//
+//            String firstHeadline = rssItems.get(0).title;
+//            System.out.print(savedHeadline+firstHeadline);
+//            if(!(firstHeadline).equals(savedHeadline)){
+//
 //                editor.putString(getString(R.string.firstRSS),firstHeadline);
 //                editor.commit();
-//                Toast.makeText(RSSFeedActivity.this, "There is a new Rss Feed *Maybe*.",
-//                        Toast.LENGTH_LONG).show();
+////                Toast.makeText(RSSFeedActivity.this, "There is a new Rss Feed *Maybe*....here in rssfeedactivity ",
+////                        Toast.LENGTH_LONG).show();
 //            }
 
 
