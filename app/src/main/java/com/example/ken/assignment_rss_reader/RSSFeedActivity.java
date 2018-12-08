@@ -16,9 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.InputStream;
@@ -32,7 +30,6 @@ import java.util.Locale;
 
 public class RSSFeedActivity extends AppCompatActivity {
 
-
     ArrayList<HashMap<String, String>> rssItemList = new ArrayList<>();
 
     RSSParser rssParser = new RSSParser();
@@ -44,23 +41,17 @@ public class RSSFeedActivity extends AppCompatActivity {
     ArrayList<String>pubDate= new ArrayList<>();
     ArrayList<String>link = new ArrayList<>();
     ArrayList<Bitmap>images = new ArrayList<>();
-//    ImageView imageView;
-   Bitmap bimage;
+    Bitmap bimage;
     Button backbutton;
-
-//    final SharedPreferences sharedPreferences = this.getSharedPreferences("com.example.myapp.namePrefereance",Context.MODE_PRIVATE);
-//    final SharedPreferences.Editor editor = sharedPreferences.edit();
 
     List<RSSItem> rssItems = new ArrayList<>();
 
-//    String savedHeadline;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rss_feed);
-//        imageView = findViewById(R.id.image);
         backbutton = findViewById(R.id.backbtn);
 
         final SharedPreferences sharedPreferences = this.getSharedPreferences("com.example.myapp.namePrefereance",Context.MODE_PRIVATE);
@@ -76,6 +67,7 @@ public class RSSFeedActivity extends AppCompatActivity {
         lv = findViewById(R.id.list);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
+            //when an item in the list view is clicked, they are brought to an in app browser, with the full article
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 Intent in = new Intent(getApplicationContext(), BrowserActivity.class);
@@ -88,7 +80,7 @@ public class RSSFeedActivity extends AppCompatActivity {
         backbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                //when the back button is pressed, Main activity is started and the saved rss feed url and the user entered url are set to blank
                 startActivity(new Intent(RSSFeedActivity.this, MainActivity.class));
                 editor.putString(getString(R.string.userStringEntered),"");
                 editor.putString(getString(R.string.userIntEntered),"");
@@ -99,26 +91,13 @@ public class RSSFeedActivity extends AppCompatActivity {
 
     public class LoadRSSFeedItems extends AsyncTask<String, String, String> {
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            RelativeLayout relativeLayout = findViewById(R.id.relativeLayout);
-            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.WRAP_CONTENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT
-            );
-
-            lp.addRule(RelativeLayout.CENTER_IN_PARENT);
-
-        }
-
+        //When the doInBackground is done, it will set up the custom listview
         @Override
         protected void onPostExecute(String result) {
             lv.setAdapter(new MyAdapter(RSSFeedActivity.this, R.layout.rss_item_list_row, title, description, pubDate, link, images));
         }
 
-
+        //method uses RSSParser class to get the items from the rss url entered by user
         @Override
         protected String doInBackground(String... args) {
             // rss link url
@@ -127,22 +106,22 @@ public class RSSFeedActivity extends AppCompatActivity {
             // list of rss items
             rssItems = rssParser.getRSSFeedItems(rss_url);
 
-
+//            final SharedPreferences sharedPreferences = RSSFeedActivity.this.getSharedPreferences("com.example.myapp.namePrefereance",Context.MODE_PRIVATE);
+//            final SharedPreferences.Editor editor = sharedPreferences.edit();
+//
+//
 //            savedHeadline = sharedPreferences.getString(getString(R.string.userStringEntered),"");
 //            //if first title is not same as saved title, then theres a new headline
-//            if(!rssItems.get(0).title.equals(savedHeadline)){
+//            if(!(rssItems.get(0).title).equals(savedHeadline)){
 //                String firstHeadline = rssItems.get(0).title;
 //                editor.putString(getString(R.string.firstRSS),firstHeadline);
-//                editor.commit();
-//                Toast.makeText(RSSFeedActivity.this, "There is a new Rss Feed *Maybe*.",
-//                        Toast.LENGTH_LONG).show();
+//                editor.apply();
 //            }
 
 
 //          loop through the rss with given number
             for(int i = 0; i<finalValue; i++){
-
-
+                //Transforming the date string into a proper format
                 String givenDateString = rssItems.get(i).pubdate.trim();
                 SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
                 try {
@@ -152,10 +131,10 @@ public class RSSFeedActivity extends AppCompatActivity {
 
                 } catch (ParseException e) {
                     e.printStackTrace();
-
                 }
-                String imageURL = rssItems.get(i).image;
 
+                //transforming the imageURL received from RSSParser into a Bitmap
+                String imageURL = rssItems.get(i).image;
                 bimage = null;
                 try {
                     InputStream in = new java.net.URL(imageURL).openStream();
@@ -165,14 +144,12 @@ public class RSSFeedActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-
+                //adding each attribute to the Arraylists
                 title.add(rssItems.get(i).title);
                 description.add(rssItems.get(i).description);
                 pubDate.add(rssItems.get(i).pubdate);
                 link.add(rssItems.get(i).link);
                 images.add(bimage);
-
-
             }
 
             return null;
@@ -181,6 +158,7 @@ public class RSSFeedActivity extends AppCompatActivity {
 
     }
 
+    //Custom List Adapter
     private class MyAdapter extends ArrayAdapter<String> {
         private int layoutResourceId;
         private String[] title = new String[]{};
@@ -188,6 +166,8 @@ public class RSSFeedActivity extends AppCompatActivity {
         private String[] pubDate = new String[]{};
         private String[] link = new String[]{};
         private Bitmap[] images = new Bitmap[]{};
+
+        //MyAdapter constructor
         public MyAdapter(Context context, int layoutId, ArrayList<String> title, ArrayList<String> description, ArrayList<String> pubDate, ArrayList<String> link, ArrayList<Bitmap>images) {
             super(context, layoutId, title);
             this.layoutResourceId = layoutId;
@@ -198,6 +178,7 @@ public class RSSFeedActivity extends AppCompatActivity {
             this.images = images.toArray(new Bitmap[0]);
         }
 
+        //getView inflates each row (or item) of the listview
         @Override
         public View getView(int index, View row, ViewGroup parent){
             row = getLayoutInflater().inflate(layoutResourceId, parent, false);

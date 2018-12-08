@@ -39,7 +39,6 @@ class RSSParser {
     private static String TAG_DESRIPTION = "description";
     private static String TAG_ITEM = "item";
     private static String TAG_PUB_DATE = "pubDate";
-    private static String TAG_IMAGE = "url";
 
     // constructor
     public RSSParser() {
@@ -63,7 +62,7 @@ class RSSParser {
                 NodeList items = e.getElementsByTagName(TAG_ITEM);
 
                 for (int i = 0; i < items.getLength(); i++) {
-                    Element element = (Element) items.item(i);
+                    Element e1 = (Element) items.item(i);
                     String image ="";
                     NodeList values = items.item(i).getChildNodes();
 
@@ -78,10 +77,10 @@ class RSSParser {
                     }
 
 
-                    String title = this.getValue(element, TAG_TITLE);
-                    String link = this.getValue(element, TAG_LINK);
-                    String description = this.getValue(element, TAG_DESRIPTION);
-                    String pubdate = this.getValue(element, TAG_PUB_DATE);
+                    String title = this.getValue(e1, TAG_TITLE);
+                    String link = this.getValue(e1, TAG_LINK);
+                    String description = this.getValue(e1, TAG_DESRIPTION);
+                    String pubdate = this.getValue(e1, TAG_PUB_DATE);
                     RSSItem rssItem = new RSSItem(title,description,image,pubdate,link);
 
                     // adding item to list
