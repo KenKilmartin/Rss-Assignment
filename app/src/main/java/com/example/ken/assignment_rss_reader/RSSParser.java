@@ -52,6 +52,7 @@ class RSSParser {
         List<RSSItem> itemsList = new ArrayList<RSSItem>();
         String rss_feed_xml;
 
+
         rss_feed_xml = this.getXmlFromUrl(rss_url);
         if (rss_feed_xml != null) {
             try {
@@ -60,31 +61,27 @@ class RSSParser {
                 Element e = (Element) nodeList.item(0);
 
                 NodeList items = e.getElementsByTagName(TAG_ITEM);
+
                 for (int i = 0; i < items.getLength(); i++) {
-                    Element e1 = (Element) items.item(i);
+                    Element element = (Element) items.item(i);
                     String image ="";
                     NodeList values = items.item(i).getChildNodes();
 
+                    //getting the image url from the xml
                     for (int j = 0; j < values.getLength(); j++){
-
                         if(values.item(j).getNodeName().equals("enclosure"))
                         {
-
                            NamedNodeMap nm = values.item(j).getAttributes();
-
-                           //item(2) as the url is the 3rd attribute of enclosure in the xml
-                           image = nm.item(2).getTextContent();
-        Log.e("URL", image);
+                           //item(2) as the image url is the 3rd attribute of enclosure in the xml
+                           image = nm.item(2).getTextContent(); //String image is the image url
                         }
-
                     }
 
 
-                    String title = this.getValue(e1, TAG_TITLE);
-                    String link = this.getValue(e1, TAG_LINK);
-                    String description = this.getValue(e1, TAG_DESRIPTION);
-                    String pubdate = this.getValue(e1, TAG_PUB_DATE);
-                   // String image = this.getValue(e1, TAG_IMAGE);
+                    String title = this.getValue(element, TAG_TITLE);
+                    String link = this.getValue(element, TAG_LINK);
+                    String description = this.getValue(element, TAG_DESRIPTION);
+                    String pubdate = this.getValue(element, TAG_PUB_DATE);
                     RSSItem rssItem = new RSSItem(title,description,image,pubdate,link);
 
                     // adding item to list
