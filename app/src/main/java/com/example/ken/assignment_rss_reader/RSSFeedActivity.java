@@ -1,6 +1,5 @@
 package com.example.ken.assignment_rss_reader;
 
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,18 +7,19 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.InputStream;
 import java.text.ParseException;
@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class RSSFeedActivity extends ListActivity {
+public class RSSFeedActivity extends AppCompatActivity {
 
 
     ArrayList<HashMap<String, String>> rssItemList = new ArrayList<>();
@@ -38,19 +38,21 @@ public class RSSFeedActivity extends ListActivity {
     RSSParser rssParser = new RSSParser();
     Toolbar toolbar;
     int finalValue;
-    ImageView imageView;
-    Bitmap bimage;
+    ListView lv;
+    ArrayList<String> title = new ArrayList<>();
+    ArrayList<String>description = new ArrayList<>();
+    ArrayList<String>pubDate= new ArrayList<>();
+    ArrayList<String>link = new ArrayList<>();
+    ArrayList<Bitmap>images = new ArrayList<>();
+//    ImageView imageView;
+   Bitmap bimage;
     Button backbutton;
 
 //    final SharedPreferences sharedPreferences = this.getSharedPreferences("com.example.myapp.namePrefereance",Context.MODE_PRIVATE);
 //    final SharedPreferences.Editor editor = sharedPreferences.edit();
 
     List<RSSItem> rssItems = new ArrayList<>();
-    private static String TAG_TITLE = "title";
-    private static String TAG_DESC = "description";
-    private static String TAG_IMAGE = "image";
-    private static String TAG_LINK = "link";
-    private static String TAG_PUB_DATE = "pubDate";
+
 //    String savedHeadline;
 
 
@@ -58,7 +60,7 @@ public class RSSFeedActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rss_feed);
-        imageView = findViewById(R.id.image);
+//        imageView = findViewById(R.id.image);
         backbutton = findViewById(R.id.backbtn);
 
         final SharedPreferences sharedPreferences = this.getSharedPreferences("com.example.myapp.namePrefereance",Context.MODE_PRIVATE);
@@ -71,7 +73,7 @@ public class RSSFeedActivity extends ListActivity {
         new LoadRSSFeedItems().execute(rss_link);
 
         // creates the list view
-        ListView lv = getListView();
+        lv = findViewById(R.id.list);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             public void onItemClick(AdapterView<?> parent, View view,
@@ -112,6 +114,12 @@ public class RSSFeedActivity extends ListActivity {
         }
 
         @Override
+        protected void onPostExecute(String result) {
+            lv.setAdapter(new MyAdapter(RSSFeedActivity.this, R.layout.rss_item_list_row, title, description, pubDate, link, images));
+        }
+
+
+        @Override
         protected String doInBackground(String... args) {
             // rss link url
             String rss_url = args[0];
@@ -131,14 +139,9 @@ public class RSSFeedActivity extends ListActivity {
 //            }
 
 
-//            trying to loop through the rss with given number
+//          loop through the rss with given number
             for(int i = 0; i<finalValue; i++){
-                // creating new HashMap11
-                if (rssItems.get(i).description.toString().equals(""))
-                    break;
-                HashMap<String, String> map = new HashMap<String, String>();
 
-                // adding each child node to HashMap key => value
 
                 String givenDateString = rssItems.get(i).pubdate.trim();
                 SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
@@ -153,8 +156,6 @@ public class RSSFeedActivity extends ListActivity {
                 }
                 String imageURL = rssItems.get(i).image;
 
-                //TODO: trying to convert imageURL to a bitmap image. Dont know how to set the image view to the image
-                //
                 bimage = null;
                 try {
                     InputStream in = new java.net.URL(imageURL).openStream();
@@ -163,37 +164,56 @@ public class RSSFeedActivity extends ListActivity {
                     Log.e("Error Message", e.getMessage());
                     e.printStackTrace();
                 }
-                map.put(TAG_TITLE, rssItems.get(i).title);
-                map.put(TAG_DESC, rssItems.get(i).description);
-                map.put(TAG_IMAGE, imageURL);
-                map.put(TAG_LINK,rssItems.get(i).link);
-                map.put(TAG_PUB_DATE, rssItems.get(i).pubdate);
 
-                // adding HashList to ArrayList
-                rssItemList.add(map);
+
+                title.add(rssItems.get(i).title);
+                description.add(rssItems.get(i).description);
+                pubDate.add(rssItems.get(i).pubdate);
+                link.add(rssItems.get(i).link);
+                images.add(bimage);
+
 
             }
 
-
-
-            // updating UI from Background Thread
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    ListAdapter adapter = new SimpleAdapter(
-                            RSSFeedActivity.this,
-                            rssItemList, R.layout.rss_item_list_row,
-
-//                            new Bitmap[]{bimage},
-                            new String[]{TAG_LINK, TAG_DESC, TAG_TITLE, TAG_IMAGE, TAG_PUB_DATE},
-                            new int[]{R.id.page_url, R.id.desc, R.id.title, R.id.image, R.id.pub_date});
-
-                    // updating listview
-                    setListAdapter(adapter);
-                }
-            });
             return null;
         }
 
 
+    }
+
+    private class MyAdapter extends ArrayAdapter<String> {
+        private int layoutResourceId;
+        private String[] title = new String[]{};
+        private String[] description = new String[]{};
+        private String[] pubDate = new String[]{};
+        private String[] link = new String[]{};
+        private Bitmap[] images = new Bitmap[]{};
+        public MyAdapter(Context context, int layoutId, ArrayList<String> title, ArrayList<String> description, ArrayList<String> pubDate, ArrayList<String> link, ArrayList<Bitmap>images) {
+            super(context, layoutId, title);
+            this.layoutResourceId = layoutId;
+            this.title = title.toArray(new String[0]);
+            this.description = description.toArray(new String[0]);
+            this.pubDate = pubDate.toArray(new String[0]);
+            this.link = link.toArray(new String[0]);
+            this.images = images.toArray(new Bitmap[0]);
+        }
+
+        @Override
+        public View getView(int index, View row, ViewGroup parent){
+            row = getLayoutInflater().inflate(layoutResourceId, parent, false);
+            TextView titleTV = row.findViewById(R.id.title);
+            TextView descriptionTV = row.findViewById(R.id.desc);
+            TextView pubDateTV = row.findViewById(R.id.pub_date);
+            TextView linkTV = row.findViewById(R.id.page_url);
+            ImageView imageView = row.findViewById(R.id.image);
+
+            titleTV.setText(title[index]);
+            descriptionTV.setText(description[index]);
+            pubDateTV.setText(pubDate[index]);
+            linkTV.setText(link[index]);
+            imageView.setImageBitmap(images[index]);
+
+            return row;
+        }
     }
 }
