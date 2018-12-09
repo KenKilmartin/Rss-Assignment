@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         final SharedPreferences sharedPreferences = this.getSharedPreferences("com.example.myapp.namePrefereance",Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = sharedPreferences.edit();
 
+        //getting the values from the shared preferences
         userSavedEnteredUrl = sharedPreferences.getString(getString(R.string.userStringEntered),"");
         userSavedEnteredNumber = sharedPreferences.getString(getString(R.string.userIntEntered),"");
 
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this, RSSFeedActivity.class).putExtra("rssLink",userSavedEnteredUrl) .putExtra("numberEntered",userSavedEnteredNumber));
         }
 
+        //Listener on the button
         button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override

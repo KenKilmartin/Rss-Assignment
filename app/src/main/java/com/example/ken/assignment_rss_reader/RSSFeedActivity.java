@@ -106,22 +106,9 @@ public class RSSFeedActivity extends AppCompatActivity {
             // list of rss items
             rssItems = rssParser.getRSSFeedItems(rss_url);
 
-//            final SharedPreferences sharedPreferences = RSSFeedActivity.this.getSharedPreferences("com.example.myapp.namePrefereance",Context.MODE_PRIVATE);
-//            final SharedPreferences.Editor editor = sharedPreferences.edit();
-//
-//
-//            savedHeadline = sharedPreferences.getString(getString(R.string.userStringEntered),"");
-//            //if first title is not same as saved title, then theres a new headline
-//            if(!(rssItems.get(0).title).equals(savedHeadline)){
-//                String firstHeadline = rssItems.get(0).title;
-//                editor.putString(getString(R.string.firstRSS),firstHeadline);
-//                editor.apply();
-//            }
-
-
 //          loop through the rss with given number
             for(int i = 0; i<finalValue; i++){
-                //Transforming the date string into a proper format
+                //Transforming the date string into a format easily read by user
                 String givenDateString = rssItems.get(i).pubdate.trim();
                 SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
                 try {
@@ -133,7 +120,7 @@ public class RSSFeedActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                //transforming the imageURL received from RSSParser into a Bitmap
+                //transforming the imageURL String received from RSSParser into a Bitmap
                 String imageURL = rssItems.get(i).image;
                 bimage = null;
                 try {
@@ -151,11 +138,8 @@ public class RSSFeedActivity extends AppCompatActivity {
                 link.add(rssItems.get(i).link);
                 images.add(bimage);
             }
-
             return null;
         }
-
-
     }
 
     //Custom List Adapter
@@ -188,6 +172,7 @@ public class RSSFeedActivity extends AppCompatActivity {
             TextView linkTV = row.findViewById(R.id.page_url);
             ImageView imageView = row.findViewById(R.id.image);
 
+            //setting the text/image on each row
             titleTV.setText(title[index]);
             descriptionTV.setText(description[index]);
             pubDateTV.setText(pubDate[index]);

@@ -76,7 +76,7 @@ class RSSParser {
                         }
                     }
 
-
+                    //creating the RSSItem to add to the itemsList
                     String title = this.getValue(e1, TAG_TITLE);
                     String link = this.getValue(e1, TAG_LINK);
                     String description = this.getValue(e1, TAG_DESRIPTION);
@@ -109,8 +109,6 @@ class RSSParser {
             xml = EntityUtils.toString(httpEntity);
 
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (ClientProtocolException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
